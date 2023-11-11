@@ -1,0 +1,47 @@
+{
+  "name": "Canvas Strikethrough",
+  "description": "Mark assignments without deliverables as complete.",
+  "author": "Daniel Stoiber",
+  "version": "1.0",
+  "manifest_version": 3,
+  "permissions": [
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.instructure.com/*",
+        "https://canvas.wpi.edu/*",
+        "https://canvas.olin.edu/*",
+        "https://canvas.calpoly.edu/*",
+        "https://canvas.pratt.edu/*",
+        "https://canvas.ucla.edu/*",
+        "https://carmen.osu.edu/*",
+        "https://canvas.uw.edu/*",
+        "https://bcourses.berkeley.edu/*",
+        "https://online.smc.edu/*",
+        "https://egator.greenriver.edu/*",
+        "https://canvas.ucsd.edu/*",
+        "https://canvas.ucdavis.edu/*",
+        "https://canvas.vt.edu/*",
+        "https://catcourses.ucmerced.edu/*",
+        "https://canvas.umich.edu/*",
+        "https://canvas.ubc.ca/*",
+        "https://canvas.qut.edu.au/*",
+        "https://canvas.csun.edu/*",
+        "https://canvas.psu.edu/*",
+        "https://canvas.colorado.edu/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
