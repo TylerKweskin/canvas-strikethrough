@@ -5,8 +5,6 @@ export function getCheckedTodos(courseList?: number[]): Todo[] {
 
   let checkedTodo: Todo[] = JSON.parse(localStorage.getItem('checkedTodo') || '[]');
 
-  console.log('getting checked todos', checkedTodo);
-
   // Filter out todos when looking at specific courses
   if (courseList !== undefined) {
     // Filter checked todos by course list

@@ -1,7 +1,6 @@
-import { getCalendarEvents } from "./getCalendarEvents";
-import { addCheckedTodo, isTodoChecked, removeCheckedTodo } from "./storage";
-import { CalendarEvent, Todo } from "./types";
-import { checkEvent, uncheckEvent } from "./updateCalendarEvent";
+import { markCompleteOnclick, markIncompleteOnclick } from "./markTodos";
+import { isTodoChecked } from "./storage";
+import { Todo } from "./types";
 
 function checkButtonHtml(courseId: number, todo: Todo, isChecked: boolean, isSubmitted: boolean): HTMLButtonElement {
   const checkButton: HTMLButtonElement = document.createElement('button');
@@ -43,50 +42,6 @@ function gradedDisclaimer(): HTMLSpanElement {
 
   return disclaimer;
 
-}
-
-function markIncompleteOnclick(courseId: number, todo: Todo, checkButton: HTMLButtonElement, updateCalendar: boolean = false) {
-  // Remove checked assignment
-  removeCheckedTodo(todo.id);
-  checkButton.innerHTML = 'Mark as complete';
-
-  // Uncheck event on calendar if updateCalendar is true
-  if (updateCalendar) {
-    const calendarEvents: CalendarEvent[] = getCalendarEvents();
-
-    calendarEvents.forEach((event: CalendarEvent) => {
-      const { name, element } = event;
-
-      // If assignment is checked
-      if (name === todo.name) {
-        uncheckEvent(element);
-      }
-    });
-  }
-
-  checkButton.onclick = () => { markCompleteOnclick(courseId, todo, checkButton, updateCalendar) };
-}
-
-function markCompleteOnclick(courseId: number, todo: Todo, checkButton: HTMLButtonElement, updateCalendar: boolean = false) {
-  // Add checked assignment
-  addCheckedTodo(todo)
-  checkButton.innerHTML = 'Mark as incomplete';
-
-  // Check event on calendar if updateCalendar is true
-  if (updateCalendar) {
-    const calendarEvents: CalendarEvent[] = getCalendarEvents();
-
-    calendarEvents.forEach((event: CalendarEvent) => {
-      const { name, element } = event;
-
-      // If assignment is checked
-      if (name === todo.name) {
-        checkEvent(element);
-      }
-    });
-  }
-
-  checkButton.onclick = () => { markIncompleteOnclick(courseId, todo, checkButton, updateCalendar) };
 }
 
 async function handleAssignment(courseId: number, assignmentId: number) {
@@ -170,8 +125,6 @@ async function handlePage(courseId: number, pageUrl: string) {
 }
 
 async function handleEvent(courseId: number, todoId: number | string, eventType: 'assignment' | 'page') {
-
-  console.log('handling event', courseId, todoId);
 
   let isChecked = false;
   let todo: Todo | undefined = undefined;

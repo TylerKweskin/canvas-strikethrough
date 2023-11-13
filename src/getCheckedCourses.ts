@@ -1,4 +1,3 @@
-
 // Get the course ID for the current grade page
 export function getCheckedCourses(): number[] {
 

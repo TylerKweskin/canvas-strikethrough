@@ -11,6 +11,7 @@ After installing the extension, either visit the Canvas calendar, or go to a ass
 ### Features
 - Mark assignments/pages as complete from the calendar.
 - Mark assignments/pages as complete from the assignment/page itself.
+- View a list of all events manually marked as complete.
 
 ### Things to note
 - Marking an assignment as complete is only for your own reference. It does not affect your submission/grade, nor does it notify your instructor.

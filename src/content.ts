@@ -4,6 +4,7 @@ import { getCheckedTodos } from "./storage";
 import { Todo, CalendarEvent } from "./types";
 import { checkEvent } from "./updateCalendarEvent";
 import { displayCheckButton } from "./displayCheckButton";
+import { displayCheckedTodos } from "./displayCheckedTodos";
 
 export async function calendar() {
 
@@ -12,14 +13,12 @@ export async function calendar() {
 
   // Get all checked assignments
   const checkedTodos: Todo[] = getCheckedTodos(courseList);
-  // const checkedTodoIds: number[] = checkedTodos.map((todo: Todo) => todo.id);
+
+  // Display checked todos list
+  displayCheckedTodos();
 
   // Get all calendar events
   const calendarEvents: CalendarEvent[] = getCalendarEvents();
-
-  console.log(courseList);
-  console.log(checkedTodos);
-  console.log(calendarEvents);
 
   calendarEvents.forEach((event: CalendarEvent) => {
     const { name, element } = event;
@@ -54,7 +53,6 @@ if (path.includes('calendar')) {
           const now = new Date().getTime();
           // Only allow calendar to update once every 100ms
           if (now - domLastModified > 100) {
-            console.log('calendar change');
             calendar();
             domLastModified = now;
           }
@@ -83,7 +81,6 @@ if (path.includes('calendar')) {
             lastPopupUrl = '';
           } else {
             if (lastPopupUrl !== eventLinkElement.getAttribute('href')) {
-              console.log('popup change');
               displayCheckButton();
             }
             lastPopupUrl = eventLinkElement.getAttribute('href') || '';
