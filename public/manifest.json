@@ -2,7 +2,7 @@
   "name": "Canvas Strikethrough",
   "description": "Mark assignments without deliverables as complete.",
   "author": "Daniel Stoiber",
-  "version": "1.0",
+  "version": "1.1",
   "manifest_version": 3,
   "permissions": [
     "storage"
