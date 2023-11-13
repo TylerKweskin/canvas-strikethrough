@@ -8,12 +8,6 @@ function checkButtonHtml(courseId: number, todo: Todo, isChecked: boolean, isSub
   checkButton.id = 'canvas-strikethrough-check-button';
   checkButton.classList.add('Button', 'Button--primary');
 
-  // Grey out button if assignment is already submitted
-  // if (isSubmitted) {
-  //   checkButton.classList.add('Button--disabled');
-  //   checkButton.disabled = true;
-  // }
-
   if (isChecked) {
     checkButton.onclick = () => {
       markIncompleteOnclick(courseId, todo, checkButton, true);
@@ -37,11 +31,11 @@ function assignmentDisclaimer(): HTMLSpanElement {
 
 function gradedDisclaimer(): HTMLSpanElement {
   const disclaimer: HTMLSpanElement = document.createElement('span');
-  disclaimer.innerHTML = 'Note: This assignment has already been graded.';
+  disclaimer.innerHTML = 'Note: This assignment has already been submitted.';
   disclaimer.style.fontStyle = 'italic';
+  disclaimer.style.color = 'var(--ic-link-color)';
 
   return disclaimer;
-
 }
 
 async function handleAssignment(courseId: number, assignmentId: number) {
@@ -58,7 +52,7 @@ async function handleAssignment(courseId: number, assignmentId: number) {
   const assignmentData = await assignmentReq.json();
 
   const assignmentName = assignmentData.name;
-  const isSubmitted = assignmentData.graded_submissions_exist;
+  const isSubmitted = assignmentData.has_submitted_submissions;
 
   // Create todo object
   const todo: Todo = {
@@ -77,16 +71,19 @@ async function handleAssignment(courseId: number, assignmentId: number) {
 
   // Create check button
   const checkButton = checkButtonHtml(courseId, todo, isChecked, isSubmitted);
- 
+
   buttonDiv.appendChild(header);
   buttonDiv.appendChild(checkButton);
   buttonDiv.appendChild(document.createElement('br'));
-  buttonDiv.appendChild(assignmentDisclaimer());
 
+  // Add disclaimer if assignment is already submitted
   if (isSubmitted) {
-    buttonDiv.appendChild(document.createElement('br'));
     buttonDiv.appendChild(gradedDisclaimer());
+    buttonDiv.appendChild(document.createElement('br'));
   }
+
+  // Add disclaimer
+  buttonDiv.appendChild(assignmentDisclaimer());
 
   rightSide?.prepend(buttonDiv);
 }
@@ -154,7 +151,7 @@ async function handleEvent(courseId: number, todoId: number | string, eventType:
     const assignmentData = await assignmentReq.json();
 
     const assignmentName = assignmentData.name;
-    isSubmitted = assignmentData.graded_submissions_exist;
+    isSubmitted = assignmentData.has_submitted_submissions;
 
     // Create todo object
     todo = {
@@ -181,11 +178,15 @@ async function handleEvent(courseId: number, todoId: number | string, eventType:
   // Add disclaimer if assignment
   if (eventType === 'assignment') {
     header.appendChild(document.createElement('br'));
-    header.appendChild(assignmentDisclaimer());
+
+    // Add disclaimer if assignment is already submitted
     if (isSubmitted) {
-      header.appendChild(document.createElement('br'));
       header.appendChild(gradedDisclaimer());
+      header.appendChild(document.createElement('br'));
     }
+
+    // Add disclaimer
+    header.appendChild(assignmentDisclaimer());
   }
 }
 

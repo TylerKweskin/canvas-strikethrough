@@ -50,7 +50,6 @@ export async function displayCheckedTodos() {
   div.id = 'checked-todos';
   div.style.display = 'block';
   div.style.opacity = '1';
-  div.classList.add('ui-droppable');
 
   const ul = document.createElement('ul');
   ul.style.listStyleType = 'none';
@@ -83,7 +82,13 @@ export async function displayCheckedTodos() {
     markAsIncompleteButton.classList.add('Button');
     markAsIncompleteButton.classList.add('Button--link');
     markAsIncompleteButton.innerText = 'Mark as incomplete';
-    markAsIncompleteButton.style.padding = '5px';
+    markAsIncompleteButton.style.padding = '3px';
+    markAsIncompleteButton.style.margin = '3px';
+    markAsIncompleteButton.style.backgroundColor = 'white';
+    markAsIncompleteButton.style.color = 'black';
+    markAsIncompleteButton.style.borderRadius = '3px';
+    markAsIncompleteButton.style.cursor = 'pointer';
+    markAsIncompleteButton.style.border = '1px solid black';
 
     markAsIncompleteButton.onclick = () => {
       markIncompleteOnclick(todo.courseId, todo, markAsIncompleteButton, true);
