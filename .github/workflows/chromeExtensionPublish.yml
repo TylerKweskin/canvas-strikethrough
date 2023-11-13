@@ -1,0 +1,38 @@
+name: Chrome Extension Publish
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4.0.0
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: yarn install
+
+    - name: Build extension
+      run: yarn build
+
+    - name: Compress dist directory
+      run: zip -r extension.zip dist
+
+    - name: Upload Extension
+      uses: mnao305/chrome-extension-upload@v4.0.1
+      with:
+        file-path: extension.zip
+        extension-id: ${{ secrets.EXTENSION_ID }}
+        client-id: ${{ secrets.CLIENT_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        refresh-token: ${{ secrets.REFRESH_TOKEN }}
+        publish: false
