@@ -14,7 +14,7 @@ export function getCalendarEvents(): CalendarEvent[] {
 
     let eventTitle = eventElement.children[0].getAttribute('title');
     // Convert encoded characters to normal characters
-    eventTitle = decodeEntities(eventTitle);
+    eventTitle = decodeEntities(eventTitle)?.trim();
 
     return {
       name: eventTitle,

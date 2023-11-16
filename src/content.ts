@@ -24,7 +24,7 @@ export async function calendar() {
     const { name, element } = event;
 
     // If assignment is checked
-    if (checkedTodos.find((todo: Todo) => todo.name === name)) {
+    if (checkedTodos.find((todo: Todo) => todo.name.trim() === name.trim())) {
       checkEvent(element);
     }
   });

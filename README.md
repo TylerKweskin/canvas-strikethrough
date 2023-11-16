@@ -3,7 +3,7 @@
 - [Download Extension](https://chrome.google.com/webstore/detail/canvas-strikethrough/cnohgbfhedbjkglpkfbjhiikjemcjhng)
 
 ### What is it?
-__Canvas Strikethrough__ is a *Chrome Extension* that allows users to mark any event on the Canvas calendar as complete. This is useful for students who want to keep track of what assignments they have completed when their instructor does not require them to submit their work through Canvas.
+__Canvas Strikethrough__ is a *Chrome Extension* that allows users to mark any event on the Canvas calendar as complete. This is useful for students who want to stay more organized and keep track of which assignments they have completed when their instructor does not require them to submit their work through Canvas.
 
 ### How does it work?
 After installing the extension, either visit the Canvas calendar, or go to a assignment/page of your choice. You will then see a new option to mark that assignment as complete.
@@ -20,7 +20,7 @@ After installing the extension, either visit the Canvas calendar, or go to a ass
 
 #### Allowed Canvas Domains
 Instructions on how to add your own university's Canvas domain will be added in the future. For now, if you would like to add your own domain, please open an issue on GitHub.
-- `*.instructure.com`
+- `*.instructure.com` *(Any Canvas URL that ends in .instructure.com)*
 - `canvas.wpi.edu`
 - `canvas.olin.edu`
 - `canvas.calpoly.edu`
