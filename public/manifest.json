@@ -1,8 +1,8 @@
 {
   "name": "Canvas Strikethrough",
-  "description": "Mark assignments without deliverables as complete.",
+  "description": "Mark Canvas calendar events without deliverables as complete.",
   "author": "Daniel Stoiber",
-  "version": "1.3",
+  "version": "1.4",
   "manifest_version": 3,
   "permissions": [
     "storage"

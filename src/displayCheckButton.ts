@@ -1,3 +1,4 @@
+import { getAssignment, getPage } from "./getTodos";
 import { markCompleteOnclick, markIncompleteOnclick } from "./markTodos";
 import { isTodoChecked } from "./storage";
 import { Todo } from "./types";
@@ -21,6 +22,7 @@ function checkButtonHtml(courseId: number, todo: Todo, isChecked: boolean, isSub
   return checkButton;
 }
 
+// Add general disclaimer
 function assignmentDisclaimer(): HTMLSpanElement {
   const disclaimer: HTMLSpanElement = document.createElement('span');
   disclaimer.innerHTML = 'Note: Marking an assignment as complete is only for your own reference. It does not affect your submission/grade, nor does it notify your instructor.';
@@ -29,6 +31,7 @@ function assignmentDisclaimer(): HTMLSpanElement {
   return disclaimer;
 }
 
+// Add disclaimer if assignment is already submitted
 function gradedDisclaimer(): HTMLSpanElement {
   const disclaimer: HTMLSpanElement = document.createElement('span');
   disclaimer.innerHTML = 'Note: This assignment has already been submitted.';
@@ -40,6 +43,7 @@ function gradedDisclaimer(): HTMLSpanElement {
 
 async function handleAssignment(courseId: number, assignmentId: number) {
 
+  // Get right side of page
   const rightSide = document.querySelector('#right-side');
   const buttonDiv = document.createElement('div');
 
@@ -47,20 +51,14 @@ async function handleAssignment(courseId: number, assignmentId: number) {
     return;
   }
 
-  // Get assignment name
-  const assignmentReq = await fetch(`../../../api/v1/courses/${courseId}/assignments/${assignmentId}`);
-  const assignmentData = await assignmentReq.json();
+  // Get assignment
+  const assignmentData = await getAssignment(courseId, assignmentId);
 
-  const assignmentName = assignmentData.name;
-  const isSubmitted = assignmentData.has_submitted_submissions;
+  if (!assignmentData) {
+    return;
+  }
 
-  // Create todo object
-  const todo: Todo = {
-    type: 'assignment',
-    courseId,
-    id: assignmentId,
-    name: assignmentName
-  };
+  const { todo, isSubmitted } = assignmentData;
 
   // Get check status
   const isChecked = isTodoChecked(courseId, assignmentId);
@@ -97,22 +95,16 @@ async function handlePage(courseId: number, pageUrl: string) {
   }
 
   // Get page name
-  const pageReq = await fetch(`../../../api/v1/courses/${courseId}/pages/${pageUrl}`);
-  const pageData = await pageReq.json();
-
-  const pageName = pageData.title;
-  const pageId = pageData.page_id;
-
-  // Create todo object
-  const todo: Todo = {
-    type: 'page',
-    courseId,
-    id: pageId,
-    name: pageName
+  const pageData = await getPage(courseId, pageUrl);
+  
+  if (!pageData) {
+    return;
   }
 
+  const { todo } = pageData;
+
   // Get check status
-  const isChecked = isTodoChecked(courseId, pageId);
+  const isChecked = isTodoChecked(courseId, todo.id);
 
   // Create check button
   const checkButton = checkButtonHtml(courseId, todo, isChecked, false);
@@ -129,37 +121,18 @@ async function handleEvent(courseId: number, todoId: number | string, eventType:
 
   if (typeof todoId === 'string') {
 
-    const pageReq = await fetch(`../../api/v1/courses/${courseId}/pages/${todoId}`);
-    const pageData = await pageReq.json();
+    const pageData = await getPage(courseId, todoId);
 
-    const pageName = pageData.title;
-    const pageId = pageData.page_id;
-
-    // Create todo object
-    todo = {
-      type: 'page',
-      courseId,
-      id: pageId,
-      name: pageName
-    }
+    todo = pageData.todo;
 
     // Get check status
-    isChecked = isTodoChecked(courseId, pageId);
+    isChecked = isTodoChecked(courseId, todo.id);
   } else if (typeof todoId === 'number') {
 
-    const assignmentReq = await fetch(`../../api/v1/courses/${courseId}/assignments/${todoId}`);
-    const assignmentData = await assignmentReq.json();
+    const assignmentData = await getAssignment(courseId, todoId);
 
-    const assignmentName = assignmentData.name;
-    isSubmitted = assignmentData.has_submitted_submissions;
-
-    // Create todo object
-    todo = {
-      type: 'assignment',
-      courseId,
-      id: todoId,
-      name: assignmentName
-    };
+    isSubmitted = assignmentData.isSubmitted
+    todo = assignmentData.todo;
 
     // Get check status
     isChecked = isTodoChecked(courseId, todoId);
