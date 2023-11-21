@@ -31,14 +31,14 @@ export async function displayCheckedTodos() {
   span.id = 'checked-todos-button';
   span.classList.add('element_toggler');
   span.setAttribute('aria-controls', 'checked-todos');
-  span.setAttribute('aria-expanded', 'true');
+  span.setAttribute('aria-expanded', 'false');
   span.setAttribute('aria-label', 'Undated items toggle list visibility');
   span.tabIndex = 0;
 
   // Header button icon
   const i = document.createElement('i');
   i.classList.add('auto_rotate');
-  i.classList.add('icon-mini-arrow-down');
+  i.classList.add('icon-mini-arrow-right');
 
   span.appendChild(i);
   span.appendChild(document.createTextNode(' Canvas Strikethrough Checked'));
@@ -48,7 +48,7 @@ export async function displayCheckedTodos() {
   // List of checked todos
   const div = document.createElement('div');
   div.id = 'checked-todos';
-  div.style.display = 'block';
+  div.style.display = 'none';
   div.style.opacity = '1';
 
   const ul = document.createElement('ul');

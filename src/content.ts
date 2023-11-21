@@ -1,4 +1,4 @@
-import { getCalendarEvents } from "./getCalendarEvents";
+import { getEvents, getCalendarView } from "./getCalendarEvents";
 import { getCheckedCourses } from "./getCheckedCourses";
 import { getCheckedTodos } from "./storage";
 import { Todo, CalendarEvent } from "./types";
@@ -18,7 +18,8 @@ export async function calendar() {
   displayCheckedTodos();
 
   // Get all calendar events
-  const calendarEvents: CalendarEvent[] = getCalendarEvents();
+  const calendarView = getCalendarView();
+  const calendarEvents: CalendarEvent[] = getEvents(calendarView);
 
   calendarEvents.forEach((event: CalendarEvent) => {
     const { name, element } = event;
@@ -41,6 +42,7 @@ if (path.includes('calendar')) {
   const calendarElement = document.querySelector('#content');
   const body = document.body;
 
+  // Handle calendar view changes
   if (calendarElement) {
     // Options for the observer (specify which changes to observe)
     const config = { childList: true, subtree: true };
@@ -67,6 +69,7 @@ if (path.includes('calendar')) {
     observer.observe(calendarElement, config);
   }
 
+  // Handle calendar event popups
   if (body) {
     // Options for the observer (specify which changes to observe)
     const config = { childList: true, subtree: true };

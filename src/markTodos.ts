@@ -1,5 +1,5 @@
 import { displayCheckedTodos } from "./displayCheckedTodos";
-import { getCalendarEvents } from "./getCalendarEvents";
+import { getEvents, getCalendarView } from "./getCalendarEvents";
 import { addCheckedTodo, removeCheckedTodo } from "./storage";
 import { CalendarEvent, Todo } from "./types";
 import { checkEvent, uncheckEvent } from "./updateCalendarEvent";
@@ -11,7 +11,8 @@ export function markIncompleteOnclick(courseId: number, todo: Todo, checkButton:
   
   // Uncheck event on calendar if updateCalendar is true
   if (updateCalendar) {
-    const calendarEvents: CalendarEvent[] = getCalendarEvents();
+    const calendarView = getCalendarView();
+    const calendarEvents: CalendarEvent[] = getEvents(calendarView);
     
     calendarEvents.forEach((event: CalendarEvent) => {
       const { name, element } = event;
@@ -34,7 +35,8 @@ export function markCompleteOnclick(courseId: number, todo: Todo, checkButton: H
   
   // Check event on calendar if updateCalendar is true
   if (updateCalendar) {
-    const calendarEvents: CalendarEvent[] = getCalendarEvents();
+    const calendarView = getCalendarView();
+    const calendarEvents: CalendarEvent[] = getEvents(calendarView);
     
     calendarEvents.forEach((event: CalendarEvent) => {
       const { name, element } = event;
