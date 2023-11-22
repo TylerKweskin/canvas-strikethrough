@@ -1,9 +1,10 @@
 import { getAssignment, getPage } from "./getTodos";
-import { markCompleteOnclick, markIncompleteOnclick } from "./markTodos";
+import { markCompleteOnclick, markIncompleteOnclick } from "./updateTodos";
 import { isTodoChecked } from "./storage";
 import { Todo } from "./types";
 
-function checkButtonHtml(courseId: number, todo: Todo, isChecked: boolean, isSubmitted: boolean): HTMLButtonElement {
+function checkButtonHtml(todo: Todo, isChecked: boolean, isSubmitted: boolean): HTMLButtonElement {
+
   const checkButton: HTMLButtonElement = document.createElement('button');
   checkButton.innerHTML = isChecked ? 'Mark as incomplete' : 'Mark as complete';
   checkButton.id = 'canvas-strikethrough-check-button';
@@ -11,11 +12,11 @@ function checkButtonHtml(courseId: number, todo: Todo, isChecked: boolean, isSub
 
   if (isChecked) {
     checkButton.onclick = () => {
-      markIncompleteOnclick(courseId, todo, checkButton, true);
+      markIncompleteOnclick(todo, checkButton, true);
     };
   } else {
     checkButton.onclick = () => {
-      markCompleteOnclick(courseId, todo, checkButton, true);
+      markCompleteOnclick(todo, checkButton, true);
     };
   }
 
@@ -26,7 +27,7 @@ function checkButtonHtml(courseId: number, todo: Todo, isChecked: boolean, isSub
 function assignmentDisclaimer(): HTMLSpanElement {
   const disclaimer: HTMLSpanElement = document.createElement('span');
   disclaimer.innerHTML = 'Note: Marking an assignment as complete is only for your own reference. It does not affect your submission/grade, nor does it notify your instructor.';
-  disclaimer.style.fontStyle = 'italic';
+  disclaimer.classList.add('disclaimer-text');
 
   return disclaimer;
 }
@@ -35,7 +36,7 @@ function assignmentDisclaimer(): HTMLSpanElement {
 function gradedDisclaimer(): HTMLSpanElement {
   const disclaimer: HTMLSpanElement = document.createElement('span');
   disclaimer.innerHTML = 'Note: This assignment has already been submitted.';
-  disclaimer.style.fontStyle = 'italic';
+  disclaimer.classList.add('disclaimer-text');
   disclaimer.style.color = 'var(--ic-link-color)';
 
   return disclaimer;
@@ -68,7 +69,7 @@ async function handleAssignment(courseId: number, assignmentId: number) {
   header.innerHTML = 'Canvas Strikethrough';
 
   // Create check button
-  const checkButton = checkButtonHtml(courseId, todo, isChecked, isSubmitted);
+  const checkButton = checkButtonHtml(todo, isChecked, isSubmitted);
 
   buttonDiv.appendChild(header);
   buttonDiv.appendChild(checkButton);
@@ -107,7 +108,7 @@ async function handlePage(courseId: number, pageUrl: string) {
   const isChecked = isTodoChecked(courseId, todo.id);
 
   // Create check button
-  const checkButton = checkButtonHtml(courseId, todo, isChecked, false);
+  const checkButton = checkButtonHtml(todo, isChecked, false);
 
   buttonDiv.appendChild(document.createElement('br'));
   buttonDiv.appendChild(checkButton);
@@ -119,17 +120,30 @@ async function handleEvent(courseId: number, todoId: number | string, eventType:
   let todo: Todo | undefined = undefined;
   let isSubmitted = false;
 
-  if (typeof todoId === 'string') {
+  if (eventType === 'page') {
 
     const pageData = await getPage(courseId, todoId);
+
+    if (!pageData) {
+      return;
+    }
 
     todo = pageData.todo;
 
     // Get check status
     isChecked = isTodoChecked(courseId, todo.id);
-  } else if (typeof todoId === 'number') {
+  } else if (eventType === 'assignment') {
+
+    // Check if todoId is a number
+    if (typeof todoId !== 'number') {
+      return;
+    }
 
     const assignmentData = await getAssignment(courseId, todoId);
+
+    if (!assignmentData) {
+      return;
+    }
 
     isSubmitted = assignmentData.isSubmitted
     todo = assignmentData.todo;
@@ -144,7 +158,7 @@ async function handleEvent(courseId: number, todoId: number | string, eventType:
     return;
   }
 
-  const checkButton = checkButtonHtml(courseId, todo, isChecked, isSubmitted)
+  const checkButton = checkButtonHtml(todo, isChecked, isSubmitted)
 
   header.appendChild(checkButton);
 
@@ -171,6 +185,10 @@ export async function displayCheckButton() {
     const courseId = parseInt(path.split('/')[2]);
     const assignmentId = parseInt(path.split('/')[4]);
 
+    if (Number.isNaN(courseId) || Number.isNaN(assignmentId)) {
+      return;
+    }
+
     handleAssignment(courseId, assignmentId);
     return;
   }
@@ -178,6 +196,11 @@ export async function displayCheckButton() {
   if (path.includes('pages')) {
     const courseId = parseInt(path.split('/')[2]);
     const pageUrl = path.split('/')[4];
+
+    if (Number.isNaN(courseId) || !pageUrl) {
+      return;
+    }
+    
     handlePage(courseId, pageUrl);
     return;
   }
@@ -198,6 +221,7 @@ export async function displayCheckButton() {
     const url = eventUrl.split('/courses/')[1];
 
     const courseId = parseInt(url.split('/')[0]);
+    console.log(url.split('/'), courseId);
     const eventType: 'assignment' | 'page' = url.split('/')[1] === 'assignments' ? 'assignment' : 'page';
     let todoId: string | number = url.split('/')[2];
 

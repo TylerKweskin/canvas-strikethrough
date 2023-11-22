@@ -4,7 +4,7 @@ import { addCheckedTodo, removeCheckedTodo } from "./storage";
 import { CalendarEvent, Todo } from "./types";
 import { checkEvent, uncheckEvent } from "./updateCalendarEvent";
 
-export function markIncompleteOnclick(courseId: number, todo: Todo, checkButton: HTMLButtonElement, updateCalendar: boolean = false) {
+export function markIncompleteOnclick(todo: Todo, checkButton: HTMLButtonElement, updateCalendar: boolean = false) {
   // Remove checked assignment
   removeCheckedTodo(todo.id);
   checkButton.innerHTML = 'Mark as complete';
@@ -25,10 +25,10 @@ export function markIncompleteOnclick(courseId: number, todo: Todo, checkButton:
     });
   }
 
-  checkButton.onclick = () => { markCompleteOnclick(courseId, todo, checkButton, updateCalendar) };
+  checkButton.onclick = () => { markCompleteOnclick(todo, checkButton, updateCalendar) };
 }
 
-export function markCompleteOnclick(courseId: number, todo: Todo, checkButton: HTMLButtonElement, updateCalendar: boolean = false) {
+export function markCompleteOnclick(todo: Todo, checkButton: HTMLButtonElement, updateCalendar: boolean = false) {
   // Add checked assignment
   addCheckedTodo(todo)
   checkButton.innerHTML = 'Mark as incomplete';
@@ -49,5 +49,5 @@ export function markCompleteOnclick(courseId: number, todo: Todo, checkButton: H
     });
   }
 
-  checkButton.onclick = () => { markIncompleteOnclick(courseId, todo, checkButton, updateCalendar) };
+  checkButton.onclick = () => { markIncompleteOnclick(todo, checkButton, updateCalendar) };
 }

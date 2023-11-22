@@ -2,6 +2,10 @@ import { Todo } from "./types";
 
 export async function getAssignment(courseId: number, assignmentId: number) {
 
+  if (!courseId || !assignmentId) {
+    return null;
+  }
+
   // Get assignment data
   const assignmentReq = await fetch(`/api/v1/courses/${courseId}/assignments/${assignmentId}`);
   // Get submission data
@@ -30,6 +34,10 @@ export async function getAssignment(courseId: number, assignmentId: number) {
 
 export async function getPage(courseId: number, pageId: number | string) {
 
+  if (!courseId || !pageId) {
+    return null;
+  }
+
   // Check if pageId is a number or a string
   const pageIdType = typeof pageId === 'number' ? 'pageId' : 'pageUrl';
 
@@ -37,11 +45,13 @@ export async function getPage(courseId: number, pageId: number | string) {
   const pageReq = await fetch(`/api/v1/courses/${courseId}/pages/${pageId}`);
   const pageData = await pageReq.json();
 
+  console.log(pageData);
+
   // Create todo object
   const page: Todo = {
     type: 'page',
     courseId,
-    id: pageIdType === 'pageId' ? pageId : pageData.id,
+    id: typeof pageId === 'number' ? pageId : pageData.page_id,
     name: pageData.title
   };
 

@@ -59,3 +59,26 @@ export function removeCheckedTodo(id: number) {
   // Save checked todos
   localStorage.setItem('checkedTodo', JSON.stringify(checkedTodos));
 }
+
+// Get checked todos list state
+export function getCheckedTodosListState(): boolean {
+  const checkedTodosListState = localStorage.getItem('checkedTodoListState');
+
+  if (checkedTodosListState === 'true') {
+    return true;
+  }
+
+  return false;
+}
+
+// Set checked todos list state
+export function setCheckedTodosListState(state: boolean) {
+  localStorage.setItem('checkedTodoListState', state.toString());
+}
+
+// Toggle checked todos list state
+export function toggleCheckedTodosListState() {
+  const checkedTodosListState = getCheckedTodosListState();
+
+  setCheckedTodosListState(!checkedTodosListState);
+}

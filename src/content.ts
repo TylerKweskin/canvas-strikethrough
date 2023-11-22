@@ -1,37 +1,13 @@
-import { getEvents, getCalendarView } from "./getCalendarEvents";
-import { getCheckedCourses } from "./getCheckedCourses";
-import { getCheckedTodos } from "./storage";
-import { Todo, CalendarEvent } from "./types";
-import { checkEvent } from "./updateCalendarEvent";
 import { displayCheckButton } from "./displayCheckButton";
-import { displayCheckedTodos } from "./displayCheckedTodos";
+import { injectCss } from "./injectCss";
+import { calendar } from "./updateCalendar";
 
-export async function calendar() {
+// Inject CSS
+injectCss();
 
-  // Get checked courses
-  const courseList: number[] = getCheckedCourses();
-
-  // Get all checked assignments
-  const checkedTodos: Todo[] = getCheckedTodos(courseList);
-
-  // Display checked todos list
-  displayCheckedTodos();
-
-  // Get all calendar events
-  const calendarView = getCalendarView();
-  const calendarEvents: CalendarEvent[] = getEvents(calendarView);
-
-  calendarEvents.forEach((event: CalendarEvent) => {
-    const { name, element } = event;
-
-    // If assignment is checked
-    if (checkedTodos.find((todo: Todo) => todo.name.trim() === name.trim())) {
-      checkEvent(element);
-    }
-  });
-}
-
+// Get path
 const path = window.location.pathname;
+
 if (path.includes('calendar')) {
 
   // Keep track of last time DOM was modified
