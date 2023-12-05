@@ -4,9 +4,7 @@
   "author": "Daniel Stoiber",
   "version": "1.6",
   "manifest_version": 3,
-  "permissions": [
-    "storage"
-  ],
+  "permissions": [],
   "content_scripts": [
     {
       "matches": [
