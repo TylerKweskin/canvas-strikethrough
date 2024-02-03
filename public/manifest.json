@@ -30,7 +30,9 @@
         "https://canvas.psu.edu/*",
         "https://canvas.colorado.edu/*",
         "https://canvas.asu.edu/*",
-        "https://canvas.ou.edu/*"
+        "https://canvas.ou.edu/*",
+        "https://canvas.endicott.edu/*",
+        "https://canvas.nau.edu/*"
       ],
       "js": [
         "content.js"
