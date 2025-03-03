@@ -9,6 +9,7 @@ export function getCheckedTodos(courseList?: number[]): Todo[] {
   if (courseList !== undefined) {
     // Filter checked todos by course list
     checkedTodo = checkedTodo.filter((todo: Todo) => {
+      console.log(courseList.includes(todo.courseId));
       return courseList.includes(todo.courseId);
     });
   }
